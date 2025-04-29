@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = "bum"   ## ENTER SECRET KEY HERE
+app.secret_key = ""   ## ENTER SECRET KEY HERE
 
 def get_db_connection():
     conn = sqlite3.connect("database.db")
