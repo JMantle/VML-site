@@ -1,0 +1,47 @@
+html, body {
+    height: 100%;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+#container {
+    height: 400px;
+    width: 300px;
+    background-color: rgb(100, 100, 100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.inputBox {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#submitButton {
+    cursor: pointer;
+}
+
+#homeButton {
+  display: block; /* Allows margin: 0 auto; to work for centering */
+  width: auto; /* Adjust width based on content */
+  padding: 10px 20px; /* Add horizontal and vertical padding */
+  text-align: center;
+  background-color: #007bff; /* A primary blue color */
+  color: white; /* White text color */
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 5px;
+  margin: 15px auto 0 auto; /* Top margin, auto for horizontal centering, no bottom margin */
+}
+
+#homeButton:hover {
+    background-color: #0057b4;
+}

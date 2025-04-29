@@ -1,0 +1,46 @@
+body {
+    font-family: sans-serif; /* A common and readable font */
+    margin: 0; /* Remove default body margins */
+  }
+  
+  .header {
+    background-color: #f0f0f0; /* Light background for the header */
+    color: #333; /* Dark text color */
+    padding: 20px;
+    text-align: center; /* Center the VML title */
+  }
+  
+  .navbar {
+    display: flex; /* Use flexbox for even spacing */
+    background-color: #333; /* Dark background for the navbar */
+    color: white; /* White text color */
+    padding: 10px;
+  }
+  
+  .nav-link {
+    color: white;
+    text-decoration: none; /* Remove underlines from links */
+    padding: 10px;
+    text-align: center; /* Center text within each link */
+    flex-grow: 1; /* Make each link grow to take up equal space */
+  }
+  
+  .nav-link:hover {
+    background-color: #555; /* Darker background on hover for interaction */
+  }
+  
+  .content {
+    padding: 20px; /* Add some padding around the main content */
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 600px) {
+    .navbar {
+      flex-direction: column; /* Stack links vertically on smaller screens */
+    }
+  
+    .nav-link {
+      width: 100%; /* Make links take full width on smaller screens */
+      margin-bottom: 5px; /* Add some space between stacked links */
+    }
+}

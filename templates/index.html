@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VML</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+</head>
+<body>
+    <div class="header">
+      <h1>VML</h1>
+    </div>
+  
+    <nav class="navbar">
+      <a href="/standings" class="nav-link">Standings</a>
+      <a href="/games" class="nav-link">Upcoming Games</a>
+      <a href="/info" class="nav-link">Info</a>
+      {% if captain %}
+      <a href="/team" class="nav-link">Manage Team</a>
+      {% endif %}
+      {% if adminperms %}
+      <a href="/admin" class="nav-link">Admin</a>
+      {% endif %}
+      {% if not loggedIn %}
+      <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
+      {% endif %}
+
+    </nav>
+  
+    <div class="content">
+        hi
+    </div>
+</body>
+</html>
