@@ -83,23 +83,19 @@ body {
     background-color: #f2f2f2;
 }
 
-/* Increase width of members column */
 .standingsTable td:nth-child(6) {
-  width: 30%; /* Give more room to members column */
+  width: 30%;
 }
 
-/* Remove bullet points from members list and make them inline */
 .standingsTable td ul {
-  list-style-type: none;  /* Remove bullet points */
-  padding: 0;  /* Remove padding */
-  margin: 0;   /* Remove margin */
-  display: flex; /* Make it a horizontal list */
-  flex-wrap: wrap; /* Allow wrapping if there are too many names */
+  list-style-type: none;
+  padding: 0;
+  margin: 0; 
+  display: block;
 }
 
 .standingsTable td ul li {
-  margin-right: 10px;  /* Add space between names */
-  white-space: nowrap;  /* Prevent names from breaking onto new lines */
+  white-space: nowrap;
 }
 
 .standingsTable th, .standingsTable td {
