@@ -24,7 +24,7 @@ def inputSubmitted():
     if found:
         if check_password_hash(found[0], attemptedPassword):
             session["loggedIn"] = True
-            return redirect("/")
+            return redirect("/index")
         else:
             flash("wrong password")
     else:
