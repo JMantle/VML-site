@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
 </head>
 <body>
-    managing ur team will go here
+    <div class="header">
+      <h1>VML</h1>
+    </div>
+  
+    <nav class="navbar">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/standings" class="nav-link">Standings</a>
+      <a href="/games" class="nav-link">Upcoming Games</a>
+      <a href="/info" class="nav-link">Info</a>
+      {% if adminperms %}
+      <a href="/admin" class="nav-link">Admin</a>
+      {% endif %}
+      {% if not loggedIn %}
+      <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
+      {% endif %}
+
+    </nav>
+  
+    <div class="content">
+        <!-- for security, only if got perms (incase they enter team manually) -->
+        {% if captain %}
+
+
+
+        team management will go here
+
+
+
+        <!-- if not got perms show nothing -->
+        {% else %}
+        <h2>permission denied</h2>
+        {% endif%}
+
+    </div>
 </body>
 </html>

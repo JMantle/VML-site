@@ -1,46 +1,126 @@
 body {
-    font-family: sans-serif; /* A common and readable font */
-    margin: 0; /* Remove default body margins */
-  }
-  
-  .header {
-    background-color: #f0f0f0; /* Light background for the header */
-    color: #333; /* Dark text color */
-    padding: 20px;
-    text-align: center; /* Center the VML title */
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 0px;
+}
+.header {
+  background-color: #f0f0f0; /* Light background for the header */
+  color: #333; /* Dark text color */
+  padding: 20px;
+  text-align: center; /* Center the VML title */
+}
+
+.navbar {
+  display: flex; /* Use flexbox for even spacing */
+  background-color: #333; /* Dark background for the navbar */
+  color: white; /* White text color */
+  padding: 10px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none; /* Remove underlines from links */
+  padding: 10px;
+  text-align: center; /* Center text within each link */
+  flex-grow: 1; /* Make each link grow to take up equal space */
+}
+
+.nav-link:hover {
+  background-color: #555; /* Darker background on hover for interaction */
+}
+
+.content {
+  padding: 20px; /* Add some padding around the main content */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
   .navbar {
-    display: flex; /* Use flexbox for even spacing */
-    background-color: #333; /* Dark background for the navbar */
-    color: white; /* White text color */
-    padding: 10px;
+    flex-direction: column; /* Stack links vertically on smaller screens */
   }
-  
+
   .nav-link {
+    width: 100%; /* Make links take full width on smaller screens */
+    margin-bottom: 5px; /* Add some space between stacked links */
+  }
+}
+/* standings table */
+
+#standingsTableDiv {
+  background-color: #f5f7fa;
+  padding: 40px;
+  color: #333;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center vertically if content is small */
+  min-height: 100vh; /* Full screen height */
+}
+
+.standingsTable {
+    width: 100%;
+    max-width: 1200px; /* Limit the maximum width of the table */
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: table;
+    border-spacing: 0;
+    table-layout: fixed; /* Fixed layout to distribute column width evenly */
+    text-align: left;
+}
+
+.standingsTable th,
+.standingsTable td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+.standingsTable th {
+    background-color: #3498db;
     color: white;
-    text-decoration: none; /* Remove underlines from links */
-    padding: 10px;
-    text-align: center; /* Center text within each link */
-    flex-grow: 1; /* Make each link grow to take up equal space */
-  }
-  
-  .nav-link:hover {
-    background-color: #555; /* Darker background on hover for interaction */
-  }
-  
-  .content {
-    padding: 20px; /* Add some padding around the main content */
-  }
-  
-  /* Responsive adjustments for smaller screens */
-  @media (max-width: 600px) {
-    .navbar {
-      flex-direction: column; /* Stack links vertically on smaller screens */
+}
+
+.standingsTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.standingsTable tr:hover {
+    background-color: #e6f7ff;
+}
+
+/* Increase width of members column */
+.standingsTable td:nth-child(6) {
+  width: 30%; /* Give more room to members column */
+}
+
+/* Remove bullet points from members list and make them inline */
+.standingsTable td ul {
+  list-style-type: none;  /* Remove bullet points */
+  padding: 0;  /* Remove padding */
+  margin: 0;   /* Remove margin */
+  display: flex; /* Make it a horizontal list */
+  flex-wrap: wrap; /* Allow wrapping if there are too many names */
+}
+
+.standingsTable td ul li {
+  margin-right: 10px;  /* Add space between names */
+  white-space: nowrap;  /* Prevent names from breaking onto new lines */
+}
+
+.standingsTable th, .standingsTable td {
+    word-wrap: break-word;
+}
+
+@media (min-width: 1024px) {
+    .standingsTable {
+        width: 80%;
     }
-  
-    .nav-link {
-      width: 100%; /* Make links take full width on smaller screens */
-      margin-bottom: 5px; /* Add some space between stacked links */
+}
+
+@media (max-width: 768px) {
+    .standingsTable {
+        width: 100%;
+    }
+    .standingsTable th, .standingsTable td {
+        font-size: 14px;
     }
 }

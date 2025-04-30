@@ -3,9 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Standings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}"
 </head>
 <body>
-    Standings will go here
+    <div class="header">
+        <h1>VML</h1>
+    </div>
+    
+      <nav class="navbar">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/games" class="nav-link">Upcoming Games</a>
+        <a href="/info" class="nav-link">Info</a>
+        {% if captain %}
+        <a href="/team" class="nav-link">Manage Team</a>
+        {% endif %}
+        {% if adminperms %}
+        <a href="/admin" class="nav-link">Admin</a>
+        {% endif %}
+        {% if not loggedIn %}
+        <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
+        {% endif %}
+  
+      </nav>
+
+    <div id="standingsTablediv">
+        <h2>Standings</h2>
+    <table class="standingsTable">
+        <tr>
+          <th>Name</th>
+          <th>Place</th>
+          <th>Games</th>
+          <th>Wins</th>
+          <th>Captain</th>
+          <th>Members</th>
+          <th>Points</th>
+        </tr>
+        {% for team in teams %}
+        <tr>
+          <td>{{ team['name'] }}</td>
+          <td>{{ team['place'] }}</td>
+          <td>{{ team['games'] }}</td>
+          <td>{{ team['wins'] }}</td>
+          <td>{{ team['captain'] }}</td>
+          <td>
+            <ul>
+              {% for member in team['members'].split(', ') %}
+                <li>{{ member }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{ team['points'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>    
+    </div>  
 </body>
 </html>
