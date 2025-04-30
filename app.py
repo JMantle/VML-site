@@ -1,21 +1,15 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = ""   ## ENTER SECRET KEY HERE
+app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
 
 # subroutine to get database connection and format
 def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
-
-# GLOBALS
-
-captain = True
-loggedIn = False
-adminperms = True
 
 # LOGIN AND SIGNUP
 
@@ -29,13 +23,13 @@ def inputSubmitted():
     conn.close()
     if found:
         if check_password_hash(found[0], attemptedPassword):
-            loggedIn = True
+            session["loggedIn"] = True
             return redirect("/")
         else:
             flash("wrong password")
     else:
         flash("no accounts with this username")
-    return redirect("/")
+    return redirect("/loginPage")
 
 # send user to sign up page
 @app.route("/goToSignUp", methods=["GET"])
@@ -70,39 +64,53 @@ def loginPage():
 def standings():
     conn = get_db_connection()
     teams = conn.execute("SELECT * FROM teams ORDER BY place ASC").fetchall()
-    return render_template("standings.html", teams = teams, loggedIn = loggedIn, captain = captain, adminperms = adminperms)
+    return render_template("standings.html", teams = teams)
 
 # GAMES
 
 @app.route("/games")
 def games():
-    return render_template("games.html", loggedIn = loggedIn, captain = captain, adminperms = adminperms)
+    return render_template("games.html")
 
 # INFO
 
 @app.route("/info")
 def info():
-    return render_template("info.html", loggedIn = loggedIn, captain = captain, adminperms = adminperms)
+    return render_template("info.html")
 
 # TEAM
 
 @app.route("/team")
 def team():
-    return render_template("team.html", loggedIn = loggedIn, captain = captain, adminperms = adminperms)  
+    return render_template("team.html")  
 
 # ADMIN
 
 @app.route("/admin")
 def admin():
-    return render_template("admin.html", loggedIn = loggedIn, captain = captain, adminperms = adminperms)  
+    return render_template("admin.html")  
+
+# INDEX
+
+@app.route("/index")
+def index():
+    return render_template("index.html")
 
 
-
-
+# MAIN
 
 @app.route("/")
-def index():
-    return render_template("index.html", loggedIn = loggedIn, captain = captain, adminperms = adminperms)
+def root():
+    
+    # SESSION VARIABLES
+
+    session["captain"] = True
+    session["loggedIn"] = False
+    session["adminperms"] = True
+
+    # LOAD HOME SCREEN
+
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

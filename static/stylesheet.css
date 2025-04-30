@@ -83,10 +83,6 @@ body {
     background-color: #f2f2f2;
 }
 
-.standingsTable tr:hover {
-    background-color: #e6f7ff;
-}
-
 /* Increase width of members column */
 .standingsTable td:nth-child(6) {
   width: 30%; /* Give more room to members column */

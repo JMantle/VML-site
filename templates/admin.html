@@ -15,10 +15,10 @@
       <a href="/standings" class="nav-link">Standings</a>
       <a href="/games" class="nav-link">Upcoming Games</a>
       <a href="/info" class="nav-link">Info</a>
-      {% if captain %}
+      {% if session.get("captain") %}
       <a href="/team" class="nav-link">Manage Team</a>
       {% endif %}
-      {% if not loggedIn %}
+      {% if not session.get("loggedIn") %}
       <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
       {% endif %}
 
