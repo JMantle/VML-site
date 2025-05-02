@@ -3,42 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ stats[0]['name'] if stats else 'Team Details' }} - VML</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='teamDetails.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="header">
-      <h1>VML</h1>
-    </div>
-  
-    <nav class="navbar">
-      <a href="/index" class="nav-link">Home</a>
-      <a href="/standings" class="nav-link">Standings</a>
-      <a href="/games" class="nav-link">Upcoming Games</a>
-      <a href="/info" class="nav-link">Info</a>
-      {% if session.get("adminperms") %}
-      <a href="/admin" class="nav-link">Admin</a>
-      {% endif %}
-      {% if not session.get("loggedIn") %}
-      <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
-      {% endif %}
 
-    </nav>
-  
-    <div class="content">
-        <!-- for security, only if got perms (incase they enter team manually) -->
-        {% if captain %}
+    <header>
+        <div class="nav-brand">
+            <img src="{{ url_for('static', filename='images/VAIL_ProfilePicture.png') }}" class="logo-img" alt="VAIL Logo">
+            <span class="logo-text">VAIL VML</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}#about">About</a></li>
+                <li><a href="{{ url_for('index') }}#media">Media</a></li>
+                <li><a href="{{ url_for('index') }}#news">News</a></li>
+                <li><a href="{{ url_for('index') }}#teams">Teams</a></li>
+                <li><a href="{{ url_for('index') }}#contact">Contact Us</a></li>
+                {% if not session['loggedIn'] %}
+                <li><a href="/login">Login</a></li>
+                {% endif %}
+                {% if session['captain'] %}
+                <li><a href="/manageTeam">Manage Team</a></li>
+                {% endif %}
+                {% if session['adminperms'] %}
+                <li><a href="/admin">Admin</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
 
+    <main class="team-details-container">
+        {% if stats %}
+            <section id="team-header">
+                <h2>{{ stats[0]['name'] }}</h2>
+                </section>
 
+            <section class="team-stats-grid">
+                <div class="stat-card">
+                    <h3>Rank</h3>
+                    <p>{{ stats[0]['place'] }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Wins</h3>
+                    <p>{{ stats[0]['wins'] }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Games Played</h3>
+                    <p>{{ stats[0]['games'] }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Points</h3>
+                    <p>{{ stats[0]['points'] }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Captain</h3>
+                    <p>{{ stats[0]['captain'] }}</p>
+                </div>
+            </section>
 
-        team management will go here
+            <section class="team-members">
+                <h2>Team Members</h2>
+                <div id="players-container">
+                    {% if stats[0]['members'] %}
+                        {% for member in stats[0]['members'].split(', ') %}
+                            <div class="player-card">
+                                <p>{{ member }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No members listed yet.</p>
+                    {% endif %}
+                </div>
+            </section>
 
+            <section class="team-actions">
+                <h2>Join Team</h2>
+                {% if session['loggedIn'] %}
+                    <form action="/requestMembership/{{ stats[0]['name'] }}" method="POST">
+                        <button type="submit">Request Membership</button>
+                    </form>
+                {% else %}
+                    <p id="loginPleaseWriting">Please <a href="/loginPage">log in</a> to request membership.</p>
+                {% endif %}
+            </section>
 
+            {% else %}
+            <p>Team not found.</p>
+        {% endif %}
+    </main>
 
-        <!-- if not got perms show nothing -->
-        {% else %}
-        <h2>permission denied</h2>
-        {% endif%}
+    <footer>
+        <p>&copy; 2025 VAIL. All rights reserved.</p>
+    </footer>
 
-    </div>
 </body>
 </html>

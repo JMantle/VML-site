@@ -79,13 +79,14 @@ def getUpcomingGames():
 
 
 
-
-
 # TEAM
 
-@app.route("/team")
-def team():
-    return render_template("team.html")  
+@app.route("/showTeam/<string:teamName>")
+def team(teamName):
+    conn = get_db_connection()
+    stats = conn.execute("SELECT * FROM teams WHERE name = ?", (teamName,)).fetchall()
+    conn.close()
+    return render_template("team.html", stats=stats)
 
 # ADMIN
 
@@ -119,3 +120,9 @@ def root():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
+
+# 

@@ -145,7 +145,7 @@ h2 {
 }
 
 .contact-form button:hover {
-  box-shadow: 0 0 10px #00FF00;
+  box-shadow: 0 0 10px #ffffff;
 }
 
 /* Footer */
@@ -216,7 +216,7 @@ footer {
 }
 
 .stat-card h3 {
-  color: #00FF00;
+  color: #ffffff;
   margin-bottom: 10px;
 }
 
@@ -230,7 +230,7 @@ footer {
 }
 
 .team-members h2, .recent-matches h2 {
-  border-bottom: 2px solid #00FF00;
+  border-bottom: 2px solid #ffffff;
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
@@ -247,4 +247,231 @@ footer {
   border-radius: 8px;
   text-align: center;
   border: 1px solid #444;
+}
+
+
+
+
+
+
+
+/* Style for the upcoming games section */
+#games {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 40px 30px;
+  margin: 30px auto;
+  border-radius: 12px;
+  width: 75%; /* Ensure it matches the width of other sections */
+  max-width: 1200px; /* Adjust max-width if needed to accommodate more columns */
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  text-align: center;
+}
+
+#games h2 {
+  font-size: 32px;
+  margin-bottom: 25px;
+}
+
+.games-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upcoming-games-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #111;
+  border: 1px solid #ffffff;
+}
+
+.upcoming-games-table th,
+.upcoming-games-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+  color: #ffffff;
+}
+
+.upcoming-games-table th {
+  background-color: #333;
+  font-weight: bold;
+  text-align: center;
+}
+
+.upcoming-games-table tr:last-child td {
+  border-bottom: none;
+}
+
+.upcoming-games-table td:nth-child(3) {
+  text-align: center;
+}
+
+.upcoming-games-table td:nth-child(4), /* Style for Home Players */
+.upcoming-games-table td:nth-child(5) { /* Style for Away Players */
+  text-align: center;
+}
+
+.upcoming-games-table td:nth-child(6) { /* Style for Other Details */
+  text-align: center;
+}
+
+#games p {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.player-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  text-align: left;
+}
+
+.player-list li {
+  margin-bottom: 5px;
+}
+
+/* teamDetails.css */
+
+.team-details-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+}
+
+#team-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 20px;
+}
+
+#team-header h2 {
+  font-size: 36px;
+  margin: 0;
+}
+
+#team-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  background-color: #111;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.team-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background-color: #111;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+.stat-card h3 {
+  color: #ffffff;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.stat-card p {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.team-members,
+.team-actions {
+  margin-bottom: 40px;
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 20px;
+}
+
+.team-members h2,
+.team-actions h2 {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#players-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.player-card {
+  background-color: #222;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #555;
+}
+
+.player-card p {
+  font-size: 1em;
+}
+
+.team-actions form {
+  text-align: center;
+}
+
+.team-actions button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #ffffff;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1em;
+}
+
+.team-actions button:hover {
+  box-shadow: 0 0 10px #ffffff;
+}
+
+.team-actions p {
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+.team-actions p a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.team-actions p a:hover {
+  text-shadow: 0 0 5px #ffffff;
+}
+
+.teamClick:hover {
+  text-shadow: 0 0 5px #ffffff;
+}
+
+.teamClick {
+  cursor: pointer;
+}
+
+#loginPleaseWriting {
+  color: #bcbcbc;
 }

@@ -103,6 +103,15 @@ def makeGame(home, away, datetime):
     connect.commit()
     connect.close()
 
+def editGame(attribute, value, id):
+    connect = sqlite3.connect("database.db")
+    c= connect.cursor()
+    c.execute("UPDATE games SET ? = ? WHERE id = ?", (attribute, value, id))
+    connect.commit()
+    connect.close()
+
+
+
 
 
 def main():
@@ -129,7 +138,16 @@ def main():
             deleteTeam(name)
         elif answer == "rg":
             resetGames()
-
+        elif answer == "eg":
+            id = input("Id: ")
+            attribute = input("attribute: ")
+            value = input("value: ")
+            editGame(attribute, value, id)
+        elif answer == "mg":
+            home = input("home: ")
+            away = input("away: ")
+            datetime = input("datetime: ")
+            makeGame(home, away, datetime)
 
 
 if __name__ == "__main__":
