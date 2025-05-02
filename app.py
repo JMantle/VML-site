@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
@@ -9,7 +10,7 @@ app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
 def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
-    return conn
+    return conn 
 
 # LOGIN AND SIGNUP
 
@@ -60,23 +61,25 @@ def loginPage():
 
 # STANDINGS
 
-@app.route("/standings")
-def standings():
+def getStandings():
     conn = get_db_connection()
     teams = conn.execute("SELECT * FROM teams ORDER BY place ASC").fetchall()
-    return render_template("standings.html", teams = teams)
+    conn.close()
+    return teams
 
 # GAMES
 
-@app.route("/games")
-def games():
-    return render_template("games.html")
+def getUpcomingGames():
+    now = datetime.now()
+    now_str = now.strftime('%Y-%m-%d %H:%M:%S')
+    conn = get_db_connection()
+    games = conn.execute("SELECT * FROM games WHERE datetime > ?", (now_str,)).fetchall()
+    conn.close()
+    return games
 
-# INFO
 
-@app.route("/info")
-def info():
-    return render_template("info.html")
+
+
 
 # TEAM
 
@@ -94,7 +97,9 @@ def admin():
 
 @app.route("/index")
 def index():
-    return render_template("index.html")
+    teams = getStandings()
+    games = getUpcomingGames()
+    return render_template("index.html", teams=teams, games=games)
 
 
 # MAIN
@@ -110,7 +115,7 @@ def root():
 
     # LOAD HOME SCREEN
 
-    return render_template("index.html")
+    return index()
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,118 +1,250 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0px;
-}
-.header {
-  background-color: #f0f0f0; /* Light background for the header */
-  color: #333; /* Dark text color */
-  padding: 20px;
-  text-align: center; /* Center the VML title */
-}
-
-.navbar {
-  display: flex; /* Use flexbox for even spacing */
-  background-color: #333; /* Dark background for the navbar */
-  color: white; /* White text color */
-  padding: 10px;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none; /* Remove underlines from links */
-  padding: 10px;
-  text-align: center; /* Center text within each link */
-  flex-grow: 1; /* Make each link grow to take up equal space */
-}
-
-.nav-link:hover {
-  background-color: #555; /* Darker background on hover for interaction */
-}
-
-.content {
-  padding: 20px; /* Add some padding around the main content */
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 600px) {
-  .navbar {
-    flex-direction: column; /* Stack links vertically on smaller screens */
-  }
-
-  .nav-link {
-    width: 100%; /* Make links take full width on smaller screens */
-    margin-bottom: 5px; /* Add some space between stacked links */
-  }
-}
-/* standings table */
-
-#standingsTableDiv {
-  background-color: #f5f7fa;
-  padding: 40px;
-  color: #333;
-  display: flex;
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center vertically if content is small */
-  min-height: 100vh; /* Full screen height */
-}
-
-.standingsTable {
-    width: 100%;
-    max-width: 1200px; /* Limit the maximum width of the table */
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: table;
-    border-spacing: 0;
-    table-layout: fixed; /* Fixed layout to distribute column width evenly */
-    text-align: left;
-}
-
-.standingsTable th,
-.standingsTable td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-}
-
-.standingsTable th {
-    background-color: #3498db;
-    color: white;
-}
-
-.standingsTable tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.standingsTable td:nth-child(6) {
-  width: 30%;
-}
-
-.standingsTable td ul {
-  list-style-type: none;
+/* Reset & Base Styles */
+* {
+  margin: 0;
   padding: 0;
-  margin: 0; 
-  display: block;
+  box-sizing: border-box;
+  font-family: 'Orbitron', sans-serif;
 }
 
-.standingsTable td ul li {
-  white-space: nowrap;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
 }
 
-.standingsTable th, .standingsTable td {
-    word-wrap: break-word;
+body {
+  background-color: #000000;
+  color: #ffffff;
+  line-height: 1.6;
 }
 
-@media (min-width: 1024px) {
-    .standingsTable {
-        width: 80%;
-    }
+/* Header & Navigation */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background-color: #000;
+  border-bottom: 1px solid #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-@media (max-width: 768px) {
-    .standingsTable {
-        width: 100%;
-    }
-    .standingsTable th, .standingsTable td {
-        font-size: 14px;
-    }
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+nav ul li a:hover {
+  text-shadow: 0 0 5px #ffffff;
+}
+
+/* Sections */
+.section {
+  text-align: center;
+  background-color: #1a1a1a;
+  margin: 30px auto;
+  border-radius: 12px;
+  width: 75%;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  padding: 40px 30px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+/* Gallery */
+.gallery {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.media-item {
+  width: 200px;
+  height: 120px;
+  background-color: #111;
+  border: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* News */
+.news-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.news-card {
+  background-color: #111;
+  border: 1px solid #ffffff;
+  padding: 20px;
+  width: 300px;
+}
+
+/* Contact Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 10px;
+  background-color: #111;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.contact-form button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #ffffff;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.contact-form button:hover {
+  box-shadow: 0 0 10px #00FF00;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 30px;
+  border-top: 1px solid #ffffff;
+}
+
+/* Leaderboard Table */
+.leaderboard-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: #111;
+  border: 1px solid #ffffff;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+  padding: 12px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  text-align: center;
+}
+
+.member-list {
+  list-style: none;
+}
+
+/* Team Details Page */
+.team-details-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+}
+
+#team-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+#team-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  background-color: #111;
+  padding: 5px;
+}
+
+.team-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background-color: #111;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+.stat-card h3 {
+  color: #00FF00;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.team-members, .recent-matches {
+  margin-bottom: 40px;
+}
+
+.team-members h2, .recent-matches h2 {
+  border-bottom: 2px solid #00FF00;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+#players-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.player-card {
+  background-color: #111;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #444;
 }

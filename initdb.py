@@ -72,6 +72,36 @@ def deleteTeam(name):
     connect.commit()
     connect.close()
 
+def resetGames():
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DROP TABLE IF EXISTS games")
+
+    c.execute("""
+
+        CREATE TABLE games (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            home TEXT NOT NULL,
+            away TEXT NOT NULL,
+            winner TEXT,
+            datetime DATETIME,
+            homeplayers TEXT,
+            awayplayers TEXT,
+            other TEXT
+        )
+
+    """)
+
+    connect.commit()
+    connect.close()
+
+def makeGame(home, away, datetime):
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+    c.execute("INSERT INTO games (home, away, datetime) VALUES (?, ?, ?)", (home, away, datetime))  
+    connect.commit()
+    connect.close()
 
 
 
@@ -97,6 +127,8 @@ def main():
         elif answer == "dt":
             name = input("name of team to delete: ")
             deleteTeam(name)
+        elif answer == "rg":
+            resetGames()
 
 
 

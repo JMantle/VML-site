@@ -1,34 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VML</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VML - Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="header">
-      <h1>VML</h1>
-    </div>
-  
-    <nav class="navbar">
-      <a href="/standings" class="nav-link">Standings</a>
-      <a href="/games" class="nav-link">Upcoming Games</a>
-      <a href="/info" class="nav-link">Info</a>
-      {% if session.get("captain") %}
-      <a href="/team" class="nav-link">Manage Team</a>
-      {% endif %}
-      {% if session.get("adminperms") %}
-      <a href="/admin" class="nav-link">Admin</a>
-      {% endif %}
-      {% if not session.get("loggedIn") %}
-      <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
-      {% endif %}
 
-    </nav>
-  
-    <div class="content">
-        home page content here
+  <!-- Navbar -->
+  <header>
+    <div class="nav-brand">
+      <img src="images/VAIL_ProfilePicture.png" class="logo-img" alt="VAIL Logo">
+      <span class="logo-text">VAIL VML</span>
     </div>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#media">Media</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#teams">Teams</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+        {% if not session['loggedIn'] %}
+        <li><a href="/loginPage">Login</a></li>
+        {% endif %}
+        {% if session['captain'] %}
+        <li><a href="/manageTeam">Manage Team</a></li>
+        {% endif %}
+        {% if session['adminperms'] %}
+        <li><a href="/admin">Admin</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <!-- About VML Section -->
+  <section id="about" class="section">
+    <h2>About VML</h2>
+    <p>The Vail Minor League (VML) is a competitive environment designed to showcase rising talent, fuel rivalry, and elevate the experience of tactical shooters through the world of VAIL.</p>
+  </section>
+
+  <!-- Media Section -->
+  <section id="media" class="section">
+    <h2>Media Gallery</h2>
+    <div class="gallery">
+      <div class="media-item">Image 1</div>
+      <div class="media-item">Image 2</div>
+      <div class="media-item">Image 3</div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section id="news" class="section">
+    <h2>Latest News</h2>
+    <div class="news-container">
+      <div class="news-card">
+        <h3>Season</h3>
+        <p>The first season of VML has officially begun. Join now and prove your skills!</p>
+      </div>
+      <div class="news-card">
+        <h3>Patch Notes 1.0</h3>
+        <p>New weapons, maps, and performance improvements in the latest update.</p>
+      </div>
+    </div>
+  </section>
+
+</table>
+  <section id="teams" class="section">
+    <h2>Teams Leaderboard</h2>
+    <table id="leaderboard" class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>Wins</th>
+          <th>Games</th>
+          <th>Captain</th>
+          <th>Members</th>
+          <th>Points</th>
+        </tr>
+        {% for team in teams %}
+        <tr>
+          <td>{{ team['place'] }}</td>
+          <td>{{ team['name'] }}</td>
+          <td>{{ team['wins'] }}</td>
+          <td>{{ team['games'] }}</td>
+          <td>{{ team['captain'] }}</td>
+          <td>
+            <ul class="member-list">
+              {% for member in team['members'].split(', ') %}
+                <li>{{ member }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{ team['points'] }}</td>
+        </tr>
+        {% endfor %}
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <h2>Contact Us</h2>
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 VAIL. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
