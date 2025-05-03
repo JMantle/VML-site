@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ stats[0]['name'] if stats else 'Team Details' }} - VML</title>
+    <title>{{ stats['name'] if stats else 'Team Details' }} - VML</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='teamDetails.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
@@ -38,37 +38,37 @@
     <main class="team-details-container">
         {% if stats %}
             <section id="team-header">
-                <h2>{{ stats[0]['name'] }}</h2>
+                <h2>{{ stats['name'] }}</h2>
                 </section>
 
             <section class="team-stats-grid">
                 <div class="stat-card">
                     <h3>Rank</h3>
-                    <p>{{ stats[0]['place'] }}</p>
+                    <p>{{ stats['place'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Wins</h3>
-                    <p>{{ stats[0]['wins'] }}</p>
+                    <p>{{ stats['wins'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Games Played</h3>
-                    <p>{{ stats[0]['games'] }}</p>
+                    <p>{{ stats['games'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Points</h3>
-                    <p>{{ stats[0]['points'] }}</p>
+                    <p>{{ stats['points'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Captain</h3>
-                    <p>{{ stats[0]['captain'] }}</p>
+                    <p>{{ stats['captain'] }}</p>
                 </div>
             </section>
 
             <section class="team-members">
                 <h2>Team Members</h2>
                 <div id="players-container">
-                    {% if stats[0]['members'] %}
-                        {% for member in stats[0]['members'].split(', ') %}
+                    {% if stats['members'] %}
+                        {% for member in stats['members'].split(', ') %}
                             <div class="player-card">
                                 <p>{{ member }}</p>
                             </div>
@@ -79,10 +79,65 @@
                 </div>
             </section>
 
+            <!-- UPCOMING GAMES -->
+             <section class="team-games">
+              <h2>Upcoming Games</h2>
+              <div class="games-container">
+                {% if games %}
+                <table class="upcoming-games-table">
+                  <thead>
+                    <tr>
+                      <th>Home Team</th>
+                      <th>Away Team</th>
+                      <th>Date & Time ({{ session["abbreviatedTimezone"] }})</th>
+                      <th>Home Players</th>
+                      <th>Away Players</th>
+                      <th>Other Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for game in games %}
+                    <tr>
+                      <td><a class="teamLink" href="/showTeam/{{ game['home'] }}">{{ game['home'] }}</a></td>
+                      <td><a class="teamLink" href="/showTeam/{{ game['away'] }}">{{ game['away'] }}</a></td>
+                      <td>{{ game['local_datetime'] }}</td>
+                      <td>
+                        {% if game['homeplayers'] %}
+                        <ul class="player-list">
+                          {% for player in game['homeplayers'].split(', ') %}
+                          <li>{{ player }}</li>
+                          {% endfor %}
+                        </ul>
+                        {% else %}
+                        -
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if game['awayplayers'] %}
+                        <ul class="player-list">
+                          {% for player in game['awayplayers'].split(', ') %}
+                          <li>{{ player }}</li>
+                          {% endfor %}
+                        </ul>
+                        {% else %}
+                        -
+                        {% endif %}
+                      </td>
+                      <td>{{ game['other'] or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+                <p>No upcoming games scheduled at the moment.</p>
+                {% endif %}
+              </div>
+            </section>
+
             <section class="team-actions">
                 <h2>Join Team</h2>
                 {% if session['loggedIn'] %}
-                    <form action="/requestMembership/{{ stats[0]['name'] }}" method="POST">
+                    <form action="/requestMembership/{{ stats['name'] }}" method="POST">
                         <button type="submit">Request Membership</button>
                     </form>
                 {% else %}

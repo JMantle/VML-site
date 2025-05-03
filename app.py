@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
@@ -25,12 +26,33 @@ def inputSubmitted():
     if found:
         if check_password_hash(found[0], attemptedPassword):
             session["loggedIn"] = True
+            session["username"] = username
+            (captain, admin) = checkPerms(username)
+            print(captain + admin)
+            session["captain"] = captain
+            session["admin"] = admin
             return redirect("/index")
         else:
             flash("wrong password")
     else:
         flash("no accounts with this username")
     return redirect("/loginPage")
+
+# check account perms
+def checkPerms(username):
+    conn = get_db_connection()
+    (captain, admin) = conn.execute("SELECT captain, admin FROM logins WHERE username = ?", (username,)).fetchone()
+    if captain == 1:
+        isCaptain = True
+    else:
+        isCaptain = False
+    if admin == 1:
+        isAdmin = True
+    else:
+        isAdmin = False
+    conn.close()
+    return isCaptain, isAdmin
+
 
 # send user to sign up page
 @app.route("/goToSignUp", methods=["GET"])
@@ -69,22 +91,68 @@ def getStandings():
 
 # GAMES
 
-def getUpcomingGames():
+def getUpcomingGames(team):
     now = datetime.now()
-    now_str = now.strftime('%Y-%m-%d %H:%M:%S')
+    now_str = now.strftime("%Y-%m-%d %H:%M:%S")
     conn = get_db_connection()
-    games = conn.execute("SELECT * FROM games WHERE datetime > ?", (now_str,)).fetchall()
+    if len(team) > 0:
+        games = conn.execute("SELECT * FROM games WHERE datetime > ? AND (home = ? OR away = ?)", (now_str, team, team)).fetchall()
+    else:
+        games = conn.execute("SELECT * FROM games WHERE datetime > ?", (now_str,)).fetchall()
     conn.close()
     return games
+
+def utc_to_local(utc_dt, timezone_str):
+    local_tz = pytz.timezone(timezone_str)
+    local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
+    return local_dt
+
+def getTimezonedGames(team):
+    games_data = getUpcomingGames(team)
+    user_timezone_str = session.get('timezone') 
+
+    updated_games = []
+
+    for game in games_data:
+        game_dict = dict(game) 
+        utc_dt = datetime.strptime(game_dict['datetime'], '%Y-%m-%d %H:%M:%S')
+
+        if user_timezone_str:
+            game_dict['local_datetime'] = utc_to_local(utc_dt, user_timezone_str).strftime('%Y-%m-%d %H:%M:%S')
+            session["abbreviatedTimezone"] = utc_dt.astimezone(pytz.timezone(user_timezone_str)).tzname()
+
+        else:
+            game_dict['local_datetime'] = game_dict['datetime']
+            session["abbreviatedTimezone"] = "UTC"
+
+        updated_games.append(game_dict)
+
+    return updated_games
+
 
 # TEAM
 
 @app.route("/showTeam/<string:teamName>")
 def team(teamName):
     conn = get_db_connection()
-    stats = conn.execute("SELECT * FROM teams WHERE name = ?", (teamName,)).fetchall()
+    stats = conn.execute("SELECT * FROM teams WHERE name = ?", (teamName,)).fetchone()
     conn.close()
-    return render_template("team.html", stats=stats)
+    games = getTimezonedGames(teamName)
+    if session.get("loggedIn") and stats["captain"] == session["username"]:
+        return render_template("team.html", stats=stats, games=games, captain=True)
+    else:
+        return render_template("team.html", stats=stats, games=games, captain=False)
+
+# MANAGE TEAM
+
+@app.route("/manageTeam")
+def manageTeam():
+    conn = get_db_connection()
+    stats = conn.execute("SELECT * FROM teams WHERE captain = ?", (session["username"], )).fetchone()
+    conn.close()
+    games = getUpcomingGames(stats["name"])
+    return render_template("team.html", stats=stats, games=games, captain=True)
+
 
 # ADMIN
 
@@ -97,9 +165,19 @@ def admin():
 @app.route("/index")
 def index():
     teams = getStandings()
-    games = getUpcomingGames()
+    games = getTimezonedGames("")
     return render_template("index.html", teams=teams, games=games)
 
+# LOADED
+
+@app.route("/loaded")
+def loaded():
+    # SET TIMEZONE
+    timezone = request.args.get("timezone")
+    if timezone:
+        session["timezone"] = timezone
+    #load index
+    return index()
 
 # MAIN
 
@@ -108,13 +186,19 @@ def root():
     
     # SESSION VARIABLES
 
-    session["captain"] = True
-    session["loggedIn"] = False
-    session["adminperms"] = True
+    if "loggedIn" not in session:
+        session["loggedIn"] = False
+    if "username" not in session:
+        session["username"] = ""
+    if "captain" not in session:
+        session["captain"] = False
+    if "adminperms" not in session:
+        session["adminperms"] = False
 
-    # LOAD HOME SCREEN
+    # LOAD
 
-    return index()
+    return render_template("load.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

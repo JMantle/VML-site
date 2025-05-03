@@ -72,7 +72,7 @@ nav ul li a:hover {
   border-radius: 12px;
   width: 75%;
   max-width: 1200px;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(91, 91, 91, 0.1);
   padding: 40px 30px;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -264,7 +264,7 @@ footer {
   border-radius: 12px;
   width: 75%; /* Ensure it matches the width of other sections */
   max-width: 1200px; /* Adjust max-width if needed to accommodate more columns */
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(91, 91, 91, 0.1);
   text-align: center;
 }
 
@@ -344,7 +344,7 @@ footer {
   background-color: #1a1a1a;
   border-radius: 12px;
   color: #ffffff;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 10px rgba(91, 91, 91, 0.1);
 }
 
 #team-header {
@@ -397,7 +397,8 @@ footer {
 }
 
 .team-members,
-.team-actions {
+.team-actions,
+.team-games {
   margin-bottom: 40px;
   border-bottom: 2px solid #ffffff;
   padding-bottom: 20px;

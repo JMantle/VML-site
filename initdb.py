@@ -110,7 +110,19 @@ def editGame(attribute, value, id):
     connect.commit()
     connect.close()
 
+def editPerms(username, captain, admin):
+    connect = sqlite3.connect("database.db")
+    c= connect.cursor()
+    c.execute("UPDATE logins SET captain = ?, admin = ? WHERE username = ?", (captain, admin, username))
+    connect.commit()
+    connect.close()
 
+def getPerms(username):
+    connect = sqlite3.connect("database.db")
+    c= connect.cursor()
+    (captain, admin) = c.execute("SELECT captain, admin FROM logins WHERE username = ?", (username,)).fetchone()
+    connect.close()
+    return captain, admin
 
 
 
@@ -148,6 +160,16 @@ def main():
             away = input("away: ")
             datetime = input("datetime: ")
             makeGame(home, away, datetime)
+        elif answer == "lp":
+            username = input("username: ")
+            captain = input("captain: ")
+            admin = input("admin: ")
+        elif answer == "gp":
+            username = input("username: ")
+            (captain, admin) = getPerms(username)
+            print("captain: ", captain)
+            print("admin: ", admin)
+
 
 
 if __name__ == "__main__":
