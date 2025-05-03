@@ -475,3 +475,20 @@ footer {
 #loginPleaseWriting {
   color: #bcbcbc;
 }
+
+/* Style for team links within the upcoming games table */
+.upcoming-games-table td .teamLink {
+  color: #ffffff; 
+  text-decoration: none; 
+  font-weight: bold;
+  transition: text-shadow 0.3s ease; 
+}
+
+.upcoming-games-table td .teamLink:hover {
+  text-shadow: 0 0 5px #ffffff; 
+}
+
+/* Ensure the team link takes up the full cell width for better clickability */
+.upcoming-games-table td {
+  position: relative;
+}

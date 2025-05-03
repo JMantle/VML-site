@@ -77,8 +77,6 @@ def getUpcomingGames():
     conn.close()
     return games
 
-
-
 # TEAM
 
 @app.route("/showTeam/<string:teamName>")

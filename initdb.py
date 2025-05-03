@@ -106,7 +106,7 @@ def makeGame(home, away, datetime):
 def editGame(attribute, value, id):
     connect = sqlite3.connect("database.db")
     c= connect.cursor()
-    c.execute("UPDATE games SET ? = ? WHERE id = ?", (attribute, value, id))
+    c.execute(f"UPDATE games SET {attribute} = ? WHERE id = ?", (value, id))
     connect.commit()
     connect.close()
 

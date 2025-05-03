@@ -12,7 +12,7 @@
   <!-- Navbar -->
   <header>
     <div class="nav-brand">
-      <img src="images/VAIL_ProfilePicture.png" class="logo-img" alt="VAIL Logo">
+      <img src="{{ url_for('static', filename='VMLLogo.jpg') }}" class="logo-img" alt="VAIL Logo">
       <span class="logo-text">VAIL VML</span>
     </div>
     <nav>
@@ -85,8 +85,8 @@
         <tbody>
           {% for game in games %}
           <tr>
-            <td>{{ game['home'] }}</td>
-            <td>{{ game['away'] }}</td>
+            <td><a class="teamLink" href="/showTeam/{{ game['home'] }}">{{ game['home'] }}</a></td>
+            <td><a class="teamLink" href="/showTeam/{{ game['away'] }}">{{ game['away'] }}</a></td>
             <td>{{ game['datetime'] }}</td>
             <td>
               {% if game['homeplayers'] %}
