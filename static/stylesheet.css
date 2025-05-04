@@ -548,3 +548,8 @@ footer {
 .admin-table button:hover {
   box-shadow: 0 0 10px #ffffff;
 }
+
+/* Increase length of input boxes to allow datetime placeholder to be fully visible */
+input[type="text"] {
+  width: 300px;
+}

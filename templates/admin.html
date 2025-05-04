@@ -12,7 +12,7 @@
   <!-- Navbar -->
   <header>
     <div class="nav-brand">
-        <img src="{{ url_for('static', filename='images/VAIL_ProfilePicture.png') }}" class="logo-img" alt="VAIL Logo">
+        <img src="{{ url_for('static', filename='VMLLogo.jpg') }}" class="logo-img" alt="VAIL Logo">
         <span class="logo-text">VAIL VML</span>
     </div>
     <nav>
@@ -104,6 +104,9 @@
               <input type="number" name="mmr" placeholder="MMR">
               <button type="submit">Update</button>
             </form>
+            <form method="POST" action="/deleteTeam/{{ team.id }}">
+              <button type="submit">Delete</button>
+            </form>
           </td>
         </tr>
         {% endfor %}
@@ -116,7 +119,6 @@
       <input type="number" name="mapwins" placeholder="Map Wins">
       <input type="number" name="matchwins" placeholder="Match Wins">
       <input type="text" name="captain" placeholder="Captain">
-      <input type="text" name="members" placeholder="member1, member2, member3">
       <input type="number" name="points" placeholder="Points">
       <input type="number" name="mmr" placeholder="MMR">
       <button type="submit">Create Team</button>
@@ -132,7 +134,8 @@
           <th>Home</th>
           <th>Away</th>
           <th>DateTime</th>
-          <th>Players</th>
+          <th>Home Players</th>
+          <th>Away Players</th>
           <th>Other</th>
           <th>Actions</th>
         </tr>
@@ -143,13 +146,21 @@
           <td>{{ game.home }}</td>
           <td>{{ game.away }}</td>
           <td>{{ game.local_datetime }}</td>
-          <td>{{ game.homeplayers }} / {{ game.awayplayers }}</td>
+          <td>{{ game.homeplayers }}</td> 
+          <td>{{ game.awayplayers }}</td>
           <td>{{ game.other or '-' }}</td>
           <td>
             <form method="POST" action="/updateGame/{{ game.id }}">
-              <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM" />
-              <input type="text" name="other" placeholder="Other details" />
+              <input type="text" name="home" placeholder="Home Team">
+              <input type="text" name="away" placeholder="Away Team">
+              <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM:SS UTC">
+              <input type="text" name="homeplayers" placeholder="Home Players (player1, player2)">
+              <input type="text" name="awayplayers" placeholder="Away Players (player1, player2)">
+              <input type="text" name="other" placeholder="Other details">
               <button type="submit">Update</button>
+            </form>
+            <form method="POST" action="/deleteGame/{{ game.id }}">
+              <button type="submit">Delete</button>
             </form>
           </td>
         </tr>
@@ -161,10 +172,7 @@
     <form method="POST" action="/createGame" class="admin-form">
       <input type="text" name="home" placeholder="Home Team" required />
       <input type="text" name="away" placeholder="Away Team" required />
-      <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM" required />
-      <input type="text" name="homeplayers" placeholder="Home1, Home2, Home3" />
-      <input type="text" name="awayplayers" placeholder="Away1, Away2, Away3" />
-      <input type="text" name="other" placeholder="Other Details" />
+      <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM:SS UTC" required />
       <button type="submit">Create Game</button>
     </form>
   </section>

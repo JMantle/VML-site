@@ -43,9 +43,9 @@ def resetTeams():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             place INT,
-            mapwins INT NOT NULL,
-            matchwins INT NOT NULL,
-            captain TEXT NOT NULL,
+            mapwins INT,
+            matchwins INT,
+            captain TEXT,
             members TEXT,
             points INT,
             mmr INT
@@ -56,20 +56,20 @@ def resetTeams():
     connect.commit()
     connect.close()
 
-def makeTeam(name, mapwins, matchwins, captain, members, points, mmr):  # feels OO to me but i dont think making it OO will help
+def makeTeam(name, mapwins, matchwins, captain, points, mmr):  # feels OO to me but i dont think making it OO will help
     connect = sqlite3.connect("database.db")
     c = connect.cursor()
 
-    c.execute("INSERT INTO teams (name, mapwins, matchwins, captain, members, points, mmr) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, mapwins, matchwins, captain, members, points, mmr))
+    c.execute("INSERT INTO teams (name, mapwins, matchwins, captain, points, mmr) VALUES (?, ?, ?, ?, ?, ?)", (name, mapwins, matchwins, captain, points, mmr))
 
     connect.commit()
     connect.close()
 
-def deleteTeam(name):
+def deleteTeam(id):
     connect = sqlite3.connect("database.db")
     c = connect.cursor()
 
-    c.execute("DELETE FROM teams WHERE name = ?", (name,))
+    c.execute("DELETE FROM teams WHERE id = ?", (id,))
 
     connect.commit()
     connect.close()
@@ -104,6 +104,16 @@ def makeGame(home, away, datetime):
     c.execute("INSERT INTO games (home, away, datetime) VALUES (?, ?, ?)", (home, away, datetime))  
     connect.commit()
     connect.close()
+
+def deleteGame(id):
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DELETE FROM games WHERE id = ?", (id,))
+
+    connect.commit()
+    connect.close()
+
 
 def editGame(attribute, value, id):
     connect = sqlite3.connect("database.db")
@@ -144,12 +154,11 @@ def main():
             games = int(input("Games: "))
             wins = int(input("Wins: "))
             captain = input("Captain: ")
-            members = input("All Members: ")
             points = int(input("Points: "))
-            makeTeam(name, place, games, wins, captain, members, points)
+            makeTeam(name, place, games, wins, captain, points)
         elif answer == "dt":
-            name = input("name of team to delete: ")
-            deleteTeam(name)
+            id = input("id of team to delete: ")
+            deleteTeam(id)
         elif answer == "rg":
             resetGames()
         elif answer == "eg":
@@ -172,8 +181,11 @@ def main():
             (captain, admin) = getPerms(username)
             print("captain: ", captain)
             print("admin: ", admin)
+        elif answer == "dg":
+            id = input("id: ")
+            deleteGame(id)
 
 
-
+# prevent accidental running
 if __name__ == "__main__":
     main()
