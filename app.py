@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
 import pytz
+from initdb import makeTeam, deleteTeam, makeGame
 
 app = Flask(__name__)
 app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
@@ -30,7 +31,7 @@ def inputSubmitted():
             (captain, admin) = checkPerms(username)
             print(captain + admin)
             session["captain"] = captain
-            session["admin"] = admin
+            session["adminperms"] = admin
             return redirect("/index")
         else:
             flash("wrong password")
@@ -156,9 +157,114 @@ def manageTeam():
 
 # ADMIN
 
+def getUsers():
+    conn = get_db_connection()
+    users = conn.execute("SELECT * FROM logins").fetchall()
+    conn.close()
+    return users
+
+@app.route("/updateUser/<string:id>", methods=["POST"])
+def updateUser(id):
+    conn = get_db_connection()
+
+    if "makeCaptain" in request.form:
+        row = conn.execute("SELECT captain FROM logins WHERE id = ?", (id,)).fetchone()
+        current = row["captain"]
+        conn.execute("UPDATE logins SET captain = ? WHERE id = ?", (0 if current else 1, id))
+
+    elif "makeAdmin" in request.form:
+        row = conn.execute("SELECT admin FROM logins WHERE id = ?", (id,)).fetchone()
+        current = row["admin"]
+        conn.execute("UPDATE logins SET admin = ? WHERE id = ?", (0 if current else 1, id))
+
+    conn.commit()
+    conn.close()
+    return redirect("/admin")
+
 @app.route("/admin")
 def admin():
-    return render_template("admin.html")  
+    teams = getStandings()
+    games = getTimezonedGames("")
+    users = getUsers()
+    return render_template("admin.html", teams=teams, games=games, users=users) 
+
+
+@app.route("/updateTeam/<int:id>", methods=["POST"])
+def updateTeam(id):
+    conn = get_db_connection()
+
+    name = request.form.get("name")
+    mapWins = request.form.get("mapwins")
+    matchWins = request.form.get("matchwins")
+    captain = request.form.get("captain")
+    members = request.form.get("members")
+    points = request.form.get("points")
+    mmr = request.form.get("mmr")
+
+    team = conn.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
+
+    updatedName = name if name else team['name']
+    updatedMapWins = mapWins if mapWins else team['mapwins']
+    updatedMatchWins = matchWins if matchWins else team['matchWins']
+    updatedCaptain = captain if captain else team['captain']
+    updatedMembers = members if members else team["members"]
+    updatedPoints = points if points else team['points']
+    updatedmmr = mmr if mmr else team["mmr"]
+
+    conn.execute("UPDATE teams SET name = ?, mapwins = ?, matchwins = ?, captain = ?, members = ?, points = ?, mmr = ? WHERE id = ?", (updatedName, updatedMapWins, updatedMatchWins, updatedCaptain, updatedMembers, updatedPoints, updatedmmr, id))
+
+    conn.commit()
+    conn.close()
+
+    sortTeams()
+
+    return redirect("/admin")
+
+@app.route("/createTeam", methods=["POST"])
+def createTeam():
+    conn = get_db_connection()
+
+    name = request.form.get("name")
+    mapwins = request.form.get("wins")
+    matchwins = request.form.get("matchwins")
+    captain = request.form.get("captain")
+    members = request.form.get("members")
+    points = request.form.get("points")
+    mmr = request.form.get("mmr")
+
+    makeTeam(name, mapwins, matchwins, captain, members, points, mmr)
+    sortTeams()
+    return redirect("/admin")
+
+
+def sortTeams():
+    conn = get_db_connection()
+    teams = conn.execute("SELECT id, mmr FROM teams").fetchall()
+
+    array = []
+    for i in range(0,len(teams)):
+        array.append(teams[i])
+
+    # bubble sort teams because data size is very low
+    swap = True
+    while swap:
+        swap = False
+        for i in range(0, len(array) - 1):
+            if array[i]["mmr"] < array[i+1]["mmr"]:
+                array[i], array[i + 1] = array[i + 1], array[i]
+                swap = True
+    
+    # return places into database
+    for i in range(0,len(array)):
+        conn.execute("INSERT INTO teams SET place = ? WHERE id = ?", (i, id))
+
+    #procedure
+            
+
+
+
+
+
 
 # INDEX
 

@@ -493,3 +493,58 @@ footer {
 .upcoming-games-table td {
   position: relative;
 }
+
+
+/* admin page */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #111;
+  border: 1px solid #ffffff;
+}
+
+.admin-table th, .admin-table td {
+  padding: 12px 15px;
+  border: 1px solid #444;
+  text-align: center;
+  color: #ffffff;
+}
+
+.admin-table th {
+  background-color: #333;
+  font-weight: bold;
+}
+
+.admin-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.admin-form input {
+  padding: 10px;
+  border: 1px solid #ffffff;
+  background-color: #111;
+  color: #ffffff;
+  width: 200px;
+}
+
+.admin-form button,
+.admin-table button {
+  padding: 8px 15px;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  transition: box-shadow 0.3s ease;
+}
+
+.admin-form button:hover,
+.admin-table button:hover {
+  box-shadow: 0 0 10px #ffffff;
+}

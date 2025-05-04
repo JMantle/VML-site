@@ -1,45 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VML - Admin Panel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="header">
-      <h1>VML</h1>
-    </div>
-  
-    <nav class="navbar">
-      <a href="/index" class="nav-link">Home</a>
-      <a href="/standings" class="nav-link">Standings</a>
-      <a href="/games" class="nav-link">Upcoming Games</a>
-      <a href="/info" class="nav-link">Info</a>
-      {% if session.get("captain") %}
-      <a href="/team" class="nav-link">Manage Team</a>
-      {% endif %}
-      {% if not session.get("loggedIn") %}
-      <a href="/loginPage" class="nav-link login-signup">Login/Signup</a>
-      {% endif %}
 
+  <!-- Navbar -->
+  <header>
+    <div class="nav-brand">
+        <img src="{{ url_for('static', filename='images/VAIL_ProfilePicture.png') }}" class="logo-img" alt="VAIL Logo">
+        <span class="logo-text">VAIL VML</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}#about">About</a></li>
+            <li><a href="{{ url_for('index') }}#media">Media</a></li>
+            <li><a href="{{ url_for('index') }}#news">News</a></li>
+            <li><a href="{{ url_for('index') }}#teams">Teams</a></li>
+            <li><a href="{{ url_for('index') }}#contact">Contact Us</a></li>
+            {% if not session['loggedIn'] %}
+            <li><a href="/login">Login</a></li>
+            {% endif %}
+            {% if session['captain'] %}
+            <li><a href="/manageTeam">Manage Team</a></li>
+            {% endif %}
+        </ul>
     </nav>
-  
-    <div class="content">
-        <!-- for security, only if got perms (incase they enter admin manually) -->
-        {% if adminperms %}
+</header>
 
+  <!-- Admin Panel -->
+  <section class="section">
+    <h2>Admin Panel</h2>
+  </section>
 
+  <!-- Account Management -->
+  <section class="section">
+    <h2>Manage Accounts</h2>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Captain</th>
+          <th>Admin</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ 'Yes' if user.captain else 'No' }}</td>
+          <td>{{ 'Yes' if user.admin else 'No' }}</td>
+          <td>
+            <form method="POST" action="/updateUser/{{ user.id }}">
+              <button name="makeCaptain" value="1">Toggle Captain</button>
+              <button name="makeAdmin" value="1">Toggle Admin</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 
-        admin will go here
+  <!-- Team Management -->
+  <section class="section">
+    <h2>Manage Teams</h2>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Map Wins</th>
+          <th>Match Wins</th>
+          <th>Captain</th>
+          <th>Members</th>
+          <th>Points</th>
+          <th>MMR</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for team in teams %}
+        <tr>
+          <td>{{ team.name }}</td>
+          <td>{{ team.mapwins }}</td>
+          <td>{{ team.matchwins }}</td>
+          <td>{{ team.captain }}</td>
+          <td>{{ team.members }}</td>
+          <td>{{ team.points }}</td>
+          <td>{{ team.mmr }}</td>
+          <td>
+            <form method="POST" action="/updateTeam/{{ team.id }}">
+              <input type="text" name="name" placeholder="Name">
+              <input type="number" name="mapwins" placeholder="Map Wins">
+              <input type="number" name="matchwins" placeholder="Match Wins">
+              <input type="text" name="captain" placeholder="Captain">
+              <input type="text" name="members" placeholder="member1, member2, member3">
+              <input type="number" name="points" placeholder="Points">
+              <input type="number" name="mmr" placeholder="MMR">
+              <button type="submit">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
+    <h3>Add New Team</h3>
+    <form method="POST" action="/createTeam" class="admin-form">
+      <input type="text" name="name" placeholder="Name">
+      <input type="number" name="mapwins" placeholder="Map Wins">
+      <input type="number" name="matchwins" placeholder="Match Wins">
+      <input type="text" name="captain" placeholder="Captain">
+      <input type="text" name="members" placeholder="member1, member2, member3">
+      <input type="number" name="points" placeholder="Points">
+      <input type="number" name="mmr" placeholder="MMR">
+      <button type="submit">Create Team</button>
+    </form>
+  </section>
 
+  <!-- Game Management -->
+  <section class="section">
+    <h2>Manage Games</h2>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Home</th>
+          <th>Away</th>
+          <th>DateTime</th>
+          <th>Players</th>
+          <th>Other</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for game in games %}
+        <tr>
+          <td>{{ game.home }}</td>
+          <td>{{ game.away }}</td>
+          <td>{{ game.local_datetime }}</td>
+          <td>{{ game.homeplayers }} / {{ game.awayplayers }}</td>
+          <td>{{ game.other or '-' }}</td>
+          <td>
+            <form method="POST" action="/updateGame/{{ game.id }}">
+              <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM" />
+              <input type="text" name="other" placeholder="Other details" />
+              <button type="submit">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-        <!-- if not got perms show nothing -->
-        {% else %}
-        <h2>permission denied</h2>
-        {% endif%}
+    <h3>Add New Game</h3>
+    <form method="POST" action="/createGame" class="admin-form">
+      <input type="text" name="home" placeholder="Home Team" required />
+      <input type="text" name="away" placeholder="Away Team" required />
+      <input type="text" name="datetime" placeholder="YYYY-MM-DD HH:MM" required />
+      <input type="text" name="homeplayers" placeholder="Home1, Home2, Home3" />
+      <input type="text" name="awayplayers" placeholder="Away1, Away2, Away3" />
+      <input type="text" name="other" placeholder="Other Details" />
+      <button type="submit">Create Game</button>
+    </form>
+  </section>
 
-    </div>
+  <footer>
+    <p>&copy; 2025 VAIL. All rights reserved.</p>
+  </footer>
 
 </body>
 </html>

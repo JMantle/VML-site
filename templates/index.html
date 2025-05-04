@@ -130,18 +130,19 @@
         <tr>
           <th>Rank</th>
           <th>Team</th>
-          <th>Wins</th>
-          <th>Games</th>
+          <th>Map Wins</th>
+          <th>Match Wins</th>
           <th>Captain</th>
           <th>Members</th>
           <th>Points</th>
+          <th>MMR</th>
         </tr>
         {% for team in teams %}
         <tr onclick="window.location=`/showTeam/{{ team['name'] }}`;" class="teamClick">
           <td>{{ team['place'] }}</td>
           <td>{{ team['name'] }}</td>
-          <td>{{ team['wins'] }}</td>
-          <td>{{ team['games'] }}</td>
+          <td>{{ team['mapwins'] }}</td>
+          <td>{{ team["matchwins"] }}</td>
           <td>{{ team['captain'] }}</td>
           <td>
             <ul class="member-list">
@@ -151,6 +152,7 @@
             </ul>
           </td>
           <td>{{ team['points'] }}</td>
+          <td>{{ team['mmr'] }}</td>
         </tr>
         {% endfor %}
       </thead>

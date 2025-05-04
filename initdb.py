@@ -40,13 +40,15 @@ def resetTeams():
     c.execute("""
 
         CREATE TABLE teams (
-            name TEXT PRIMARY KEY NOT NULL,
-            place INT NOT NULL,
-            games INT NOT NULL,
-            wins INT NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            place INT,
+            mapwins INT NOT NULL,
+            matchwins INT NOT NULL,
             captain TEXT NOT NULL,
             members TEXT,
-            points INT
+            points INT,
+            mmr INT
         )
 
     """)
@@ -54,11 +56,11 @@ def resetTeams():
     connect.commit()
     connect.close()
 
-def makeTeam(name, place, games, wins, captain, members, points):  # feels OO to me but i dont think making it OO will help
+def makeTeam(name, mapwins, matchwins, captain, members, points, mmr):  # feels OO to me but i dont think making it OO will help
     connect = sqlite3.connect("database.db")
     c = connect.cursor()
 
-    c.execute("INSERT INTO teams (name, place, games, wins, captain, members, points) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, place, games, wins, captain, members, points))
+    c.execute("INSERT INTO teams (name, mapwins, matchwins, captain, members, points, mmr) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, mapwins, matchwins, captain, members, points, mmr))
 
     connect.commit()
     connect.close()
@@ -164,6 +166,7 @@ def main():
             username = input("username: ")
             captain = input("captain: ")
             admin = input("admin: ")
+            editPerms(username, captain, admin)
         elif answer == "gp":
             username = input("username: ")
             (captain, admin) = getPerms(username)
