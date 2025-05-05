@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
 import pytz
-from initdb import makeTeam, deleteTeam, makeGame, deleteGame
+from initdb import makeTeam, deleteTeam, makeGame, deleteGame, deleteRequest
 
 app = Flask(__name__)
 app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
@@ -137,31 +137,141 @@ def getTimezonedGames(team):
 def team(teamName):
     conn = get_db_connection()
     stats = conn.execute("SELECT * FROM teams WHERE name = ?", (teamName,)).fetchone()
-    conn.close()
     games = getTimezonedGames(teamName)
     if session.get("loggedIn") and stats["captain"] == session["username"]:
-        return render_template("team.html", stats=stats, games=games, captain=True)
+        requests = conn.execute("SELECT * FROM requests WHERE teamid = ?", (stats["id"],)).fetchall()
+        conn.close()
+        return render_template("team.html", stats=stats, games=games, captain=True, member=True, requests=requests)
     else:
-        return render_template("team.html", stats=stats, games=games, captain=False)
+        if session["username"] + ", " in stats["members"] or bool(conn.execute("SELECT 1 FROM requests WHERE username = ? AND teamid = ?", (session["username"], stats["id"]))):
+            member = True
+        else:
+            member = False
+        conn.close()
+
+        return render_template("team.html", stats=stats, games=games, captain=False, member=member)
+    
+@app.route("/requestMembership/<int:teamId>/<string:username>", methods=["POST"])
+def requestMembership(teamId, username):
+    message = request.form.get("message")
+    conn = get_db_connection()
+    conn.execute("INSERT INTO requests (teamid, username, message) VALUES (?, ?, ?)", (teamId, username, message))
+    conn.commit()
+
+    #get team to redirect to
+    team = conn.execute("SELECT name FROM teams WHERE id = ?", (teamId,)).fetchone()
+    conn.close()
+
+    return redirect("/showTeam/" + team[0])
 
 # MANAGE TEAM
 
 @app.route("/manageTeam")
 def manageTeam():
     conn = get_db_connection()
-    stats = conn.execute("SELECT * FROM teams WHERE captain = ?", (session["username"], )).fetchone()
+    team = conn.execute("SELECT name FROM teams WHERE captain = ?", (session["username"], )).fetchone()
     conn.close()
-    games = getUpcomingGames(stats["name"])
-    return render_template("team.html", stats=stats, games=games, captain=True)
+    return redirect("/showTeam/" + team[0])
 
+@app.route("/removeFromTeam/<int:id>/<string:member>", methods=["POST"])
+def removeFromTeam(id, member):
+    #get members
+    conn = get_db_connection()
+    members = conn.execute("SELECT members FROM teams WHERE id = ?", (id,)).fetchone()
+
+    #remove sepcific member
+    membersString = members[0]
+    members = []
+    while len(membersString) > 0:
+        comma = membersString.find(",")
+        if comma == -1:
+            members.append(membersString)
+            membersString = ""
+        else:
+            members.append(membersString[:comma])
+            membersString = membersString[comma + 2:]
+    members.remove(member)
+    membersString = ""
+
+    #add all items except last with comma
+    for i in range(0, len(members) - 1):
+        membersString = membersString + members[i] + ", "
+    
+    #add last item without comma
+    membersString = membersString + members[len(members) - 1]
+    
+    #put back into database
+    conn.execute("UPDATE teams SET members = ? where id = ?", (membersString.strip(), id))
+    conn.commit()
+    conn.close()
+
+    return redirect("/manageTeam")
+
+@app.route("/addMember/<int:id>", methods=["POST"])
+def addMember(id):
+    name = request.form.get("name").strip()
+
+    conn = get_db_connection()
+    members = conn.execute("SELECT members FROM teams WHERE id = ?", (id,)).fetchone()[0]
+
+    if members:
+        members += ", " + name
+    else:
+        members = name
+
+    conn.execute("UPDATE teams SET members = ? WHERE id = ?", (members, id))
+    conn.commit()
+    conn.close()
+    return redirect("/manageTeam")
+
+@app.route("/assignPlayers/<int:gameId>/<string:teamName>", methods=["POST"])
+def assignPlayers(gameId, teamName):
+    players = request.form.get("players").strip()
+    conn = get_db_connection()
+
+    side = conn.execute("SELECT home FROM games WHERE id = ?", (gameId,)).fetchone()
+    if side[0] == teamName:
+        #home team
+        conn.execute("UPDATE games SET homeplayers = ? WHERE id = ?", (players, gameId))
+    else:
+        #away team
+        conn.execute("UPDATE games SET awayplayers = ? WHERE id = ?", (players, gameId))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/manageTeam")
+
+@app.route("/acceptRequest/<int:id>", methods=["POST"])
+def acceptRequest(id):
+    conn = get_db_connection()
+
+    #get request
+    request = conn.execute("SELECT * FROM requests WHERE id = ?", (id,)).fetchone()
+    #insert it into members
+    members = conn.execute("SELECT members FROM teams WHERE id = ?", (id,)).fetchone()
+    members = members + ", " + request["username"]
+    conn.execute("UPDATE teams SET members = ? WHERE id = ?", (members, id))
+    
+    #delete request
+    deleteRequest(id)
+
+    return redirect("/manageTeam")
+
+@app.route("/declineRequest/<int:id>", methods=["POST"])
+def declineRequest(id):
+    deleteRequest(id)
+    return redirect("/manageTeam")
 
 # ADMIN
 
 @app.route("/admin")
 def admin():
+    #get data
     teams = getStandings()
     games = getTimezonedGames("")
     users = getUsers()
+    #load page
     return render_template("admin.html", teams=teams, games=games, users=users) 
 
 # users
@@ -196,13 +306,13 @@ def updateUser(id):
 def updateTeam(id):
     conn = get_db_connection()
 
-    name = request.form.get("name")
-    mapWins = request.form.get("mapwins")
-    matchWins = request.form.get("matchwins")
-    captain = request.form.get("captain")
-    members = request.form.get("members")
-    points = request.form.get("points")
-    mmr = request.form.get("mmr")
+    name = request.form.get("name").strip()
+    mapWins = request.form.get("mapwins").strip()
+    matchWins = request.form.get("matchwins").strip()
+    captain = request.form.get("captain").strip()
+    members = request.form.get("members").strip()
+    points = request.form.get("points").strip()
+    mmr = request.form.get("mmr").strip()
 
     team = conn.execute("SELECT * FROM teams WHERE id = ?", (id,)).fetchone()
 
@@ -226,12 +336,12 @@ def updateTeam(id):
 @app.route("/createTeam", methods=["POST"])
 def createTeam():
 
-    name = request.form.get("name")
-    mapwins = request.form.get("mapwins")
-    matchwins = request.form.get("matchwins")
-    captain = request.form.get("captain")
-    points = request.form.get("points")
-    mmr = request.form.get("mmr")
+    name = request.form.get("name").strip()
+    mapwins = request.form.get("mapwins").strip()
+    matchwins = request.form.get("matchwins").strip()
+    captain = request.form.get("captain").strip()
+    points = request.form.get("points").strip()
+    mmr = request.form.get("mmr").strip()
 
     makeTeam(name, mapwins, matchwins, captain, points, mmr)
     sortTeams()
@@ -273,12 +383,12 @@ def sortTeams():
 def updateGame(id):
     conn = get_db_connection()
 
-    home = request.form.get("home")
-    away = request.form.get("away")
-    datetime = request.form.get("datetime")
-    homePlayers = request.form.get("homeplayers")
-    awayPlayers = request.form.get("awayplayers")
-    other = request.form.get("other")
+    home = request.form.get("home").strip()
+    away = request.form.get("away").strip()
+    datetime = request.form.get("datetime").strip()
+    homePlayers = request.form.get("homeplayers").strip()
+    awayPlayers = request.form.get("awayplayers").strip()
+    other = request.form.get("other").strip()
     
     game = conn.execute("SELECT * FROM games WHERE id = ?", (id,)).fetchone()
 
@@ -304,9 +414,9 @@ def deleteGameRoute(id):
 @app.route("/createGame", methods=["POST"])
 def createGame():
 
-    home = request.form.get("home")
-    away = request.form.get("away")
-    datetime = request.form.get("datetime")
+    home = request.form.get("home").strip()
+    away = request.form.get("away").strip()
+    datetime = request.form.get("datetime").strip()
 
     makeGame(home, away, datetime)
     sortTeams()

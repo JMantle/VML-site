@@ -553,3 +553,7 @@ footer {
 input[type="text"] {
   width: 300px;
 }
+
+.addMemberInput {
+  max-width: 100px;
+}

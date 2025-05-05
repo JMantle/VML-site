@@ -9,6 +9,7 @@
 </head>
 <body>
 
+  {% if session["adminperms"] %}
   <!-- Navbar -->
   <header>
     <div class="nav-brand">
@@ -23,9 +24,6 @@
             <li><a href="{{ url_for('index') }}#games">Games</a></li>
             <li><a href="{{ url_for('index') }}#teams">Teams</a></li>
             <li><a href="{{ url_for('index') }}#contact">Contact Us</a></li>
-            {% if not session['loggedIn'] %}
-            <li><a href="/login">Login</a></li>
-            {% endif %}
             {% if session['captain'] %}
             <li><a href="/manageTeam">Manage Team</a></li>
             {% endif %}
@@ -181,6 +179,7 @@
   <footer>
     <p>&copy; 2025 VAIL. All rights reserved.</p>
   </footer>
+  {% endif %}
 
 </body>
 </html>

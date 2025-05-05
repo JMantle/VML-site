@@ -136,6 +136,34 @@ def getPerms(username):
     connect.close()
     return captain, admin
 
+def resetRequests():
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DROP TABLE IF EXISTS requests")
+
+    c.execute("""
+
+        CREATE TABLE requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            teamid INT,
+            username TEXT,
+            message TEXT
+        )
+
+    """)
+
+    connect.commit()
+    connect.close()
+
+def deleteRequest(id):
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DELETE FROM requests WHERE id = ?", (id,))
+
+    connect.commit()
+    connect.close()
 
 
 def main():
@@ -184,6 +212,11 @@ def main():
         elif answer == "dg":
             id = input("id: ")
             deleteGame(id)
+        elif answer == "rr":
+            resetRequests()
+        elif answer == "dr":
+            id = input("id: ")
+            deleteRequest(id)
 
 
 # prevent accidental running

@@ -23,7 +23,7 @@
                 <li><a href="{{ url_for('index') }}#teams">Teams</a></li>
                 <li><a href="{{ url_for('index') }}#contact">Contact Us</a></li>
                 {% if not session['loggedIn'] %}
-                <li><a href="/login">Login</a></li>
+                <li><a href="/loginPage">LoginPage</a></li>
                 {% endif %}
                 {% if session['captain'] %}
                 <li><a href="/manageTeam">Manage Team</a></li>
@@ -76,10 +76,25 @@
                         {% for member in stats['members'].split(', ') %}
                             <div class="player-card">
                                 <p>{{ member }}</p>
+                                {% if captain %}
+                                <form action="/removeFromTeam/{{ stats['id'] }}/{{ member }}" method="POST">
+                                    <button type="submit">Remove</button>
+                                </form>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}
-                        <p>No members listed yet.</p>
+                        <div class="player-card">
+                            <p>No members listed yet.</p>
+                        </div>
+                    {% endif %}
+                    {% if captain %}
+                    <div class="player-card">
+                        <form action="/addMember/{{ stats['id'] }}" method="POST">
+                            <input class="addMemberInput" name="name" placeholder="Username" type="text">
+                            <button type="submit">Add Member</button>
+                        </form>
+                    </div>
                     {% endif %}
                 </div>
             </section>
@@ -98,6 +113,9 @@
                       <th>Home Players</th>
                       <th>Away Players</th>
                       <th>Other Details</th>
+                      {% if captain %}
+                      <th>Assign Players</th>
+                      {% endif %}
                     </tr>
                   </thead>
                   <tbody>
@@ -129,6 +147,14 @@
                         {% endif %}
                       </td>
                       <td>{{ game['other'] or '-' }}</td>
+                      {% if captain %}
+                      <td>
+                        <form action="/assignPlayers/{{ game['id'] }}/{{ stats['name'] }}" method="POST">
+                            <input type="text" name="players" placeholder="player1, player2, player3...">
+                            <button type="submit">Assign Players</button>
+                        </form>
+                      </td>
+                      {% endif %}
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -140,14 +166,53 @@
             </section>
 
             <section class="team-actions">
+                <!-- request membership -->
+                {% if not member %}
                 <h2>Join Team</h2>
                 {% if session['loggedIn'] %}
-                    <form action="/requestMembership/{{ stats['name'] }}" method="POST">
+                    <form action="/requestMembership/{{ stats['id'] }}/{{ session['username']}}" method="POST">
+                        <input type="text" name="message" method="POST" placeholder="Enter Message to the captain">
                         <button type="submit">Request Membership</button>
                     </form>
                 {% else %}
                     <p id="loginPleaseWriting">Please <a href="/loginPage">log in</a> to request membership.</p>
                 {% endif %}
+                {% endif%}
+
+                <!-- view membership requests-->
+                {% if captain %}
+                    <h2>Membership Requests</h2>
+                    {% if requests%}
+                        <table class="upcoming-games-table">   <!-- lazy on the css-->
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Message</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for request in requests %}
+                                <tr>
+                                    <td>{{ request.username }}</td>
+                                    <td>{{ request.message }}</td>
+                                    <td>
+                                        <form action="/acceptRequest/{{ request.id }}" method="POST">
+                                            <button type="submit">Accept</button>
+                                        </form>
+                                        <form action="/declineRequest/{{ request.id }}" method="POST">
+                                            <button type="submit">Decline</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You have no membership requests</p>
+                    {% endif %}
+                {% endif %}
+
             </section>
 
         {% else %}
