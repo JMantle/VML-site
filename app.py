@@ -64,18 +64,22 @@ def goToSignUp():
 @app.route("/signUpSubmit", methods=["POST"])
 def signUp():
     username = request.form["username"]
-    hashedPassword = generate_password_hash(request.form["password"])
-    conn = get_db_connection()
-    found = conn.execute("SELECT password FROM logins WHERE username = ?", (username,)).fetchone()
-    if found:
-       conn.close()
-       flash("Username already taken")
-       return render_template("/signUpPage.html")
+    if ',' in username:
+        flash('Username cannot contain commas.')
+        return redirect('/signUpPage')
     else:
-        conn.execute("INSERT INTO logins (username, password) VALUES (?, ?)", (username, hashedPassword))
-        conn.commit()
-        conn.close()
-        return redirect("/loginPage")
+        hashedPassword = generate_password_hash(request.form["password"])
+        conn = get_db_connection()
+        found = conn.execute("SELECT password FROM logins WHERE username = ?", (username,)).fetchone()
+        if found:
+           conn.close()
+           flash("Username already taken")
+           return render_template("/signUpPage.html")
+        else:
+            conn.execute("INSERT INTO logins (username, password) VALUES (?, ?)", (username, hashedPassword))
+            conn.commit()
+            conn.close()
+            return redirect("/loginPage")
     
 # send user to log in page
 @app.route("/loginPage", methods=["GET"])
