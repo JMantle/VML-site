@@ -19,6 +19,7 @@
                 <li><a href="{{ url_for('index') }}#about">About</a></li>
                 <li><a href="{{ url_for('index') }}#media">Media</a></li>
                 <li><a href="{{ url_for('index') }}#news">News</a></li>
+                <li><a href="{{ url_for('index') }}#games">Games</a></li>
                 <li><a href="{{ url_for('index') }}#teams">Teams</a></li>
                 <li><a href="{{ url_for('index') }}#contact">Contact Us</a></li>
                 {% if not session['loggedIn'] %}
@@ -34,6 +35,7 @@
         </nav>
     </header>
 
+    <!-- Team Stats -->
     <main class="team-details-container">
         {% if stats %}
             <section id="team-header">
@@ -46,16 +48,20 @@
                     <p>{{ stats['place'] }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Wins</h3>
-                    <p>{{ stats['wins'] }}</p>
+                    <h3>Map Wins</h3>
+                    <p>{{ stats['mapwins'] }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Games Played</h3>
-                    <p>{{ stats['games'] }}</p>
+                    <h3>Match Wins</h3>
+                    <p>{{ stats['matchwins'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Points</h3>
                     <p>{{ stats['points'] }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>MMR</h3>
+                    <p>{{ stats['mmr'] }}</p>
                 </div>
                 <div class="stat-card">
                     <h3>Captain</h3>

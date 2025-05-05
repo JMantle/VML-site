@@ -145,11 +145,15 @@
           <td>{{ team["matchwins"] }}</td>
           <td>{{ team['captain'] }}</td>
           <td>
+            {% if team["members"] %}
             <ul class="member-list">
               {% for member in team['members'].split(', ') %}
                 <li>{{ member }}</li>
               {% endfor %}
             </ul>
+            {% else %}
+              -
+            {% endif %}
           </td>
           <td>{{ team['points'] }}</td>
           <td>{{ team['mmr'] }}</td>

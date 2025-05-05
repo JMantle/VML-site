@@ -261,7 +261,7 @@ def sortTeams():
     
     # return places into database
     for i in range(0,len(array)):
-        conn.execute("UPDATE teams SET place = ? WHERE id = ?", (i, array[i]["id"]))
+        conn.execute("UPDATE teams SET place = ? WHERE id = ?", (i + 1, array[i]["id"]))
     conn.commit()
     conn.close()
 
