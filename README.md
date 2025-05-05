@@ -16,6 +16,12 @@ HTML/CSS (Jinja templates)
 
 sign up/login with custom permissions for captains and admins
 
+standings for each team
+
+upcoming games
+
+team management tools
+
 # Permission
 
 please only view this code and share it for viewing. Please contact vailminorleaguevml@gmail.com for enquiries.
