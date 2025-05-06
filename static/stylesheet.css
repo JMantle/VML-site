@@ -112,6 +112,36 @@ input, textarea {
   font-family: 'Orbitron', sans-serif;
 }
 
+/* === VIDEO === */
+
+.video-section {
+  margin: 30px auto;
+  padding: 0;
+  width: 75%;
+  max-width: 1200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(91, 91, 91, 0.2);
+}
+
+.video-box {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  background-color: #000;
+}
+
+.video-box video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+}
+
 /* === GALLERY === */
 .gallery {
   display: flex;

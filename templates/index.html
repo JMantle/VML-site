@@ -12,7 +12,7 @@
   <!-- Navbar -->
   <header>
     <div class="nav-brand">
-      <img src="{{ url_for('static', filename='VMLLogo.jpg') }}" class="logo-img" alt="VAIL Logo">
+      <img src="{{ url_for('static', filename='VAILLogo.jpg') }}" class="logo-img" alt="VAIL Logo">
       <span class="logo-text">VAIL VML</span>
     </div>
     <nav>
@@ -35,6 +35,16 @@
       </ul>
     </nav>
   </header>
+
+  <!-- Video Section -->
+  <section id="video" class="section video-section">
+    <div class="video-box">
+      <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='VAILVideo.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </section>
 
   <!-- About VML Section -->
   <section id="about" class="section">
