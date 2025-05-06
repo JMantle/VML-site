@@ -27,6 +27,7 @@
             {% if session['captain'] %}
             <li><a href="/manageTeam">Manage Team</a></li>
             {% endif %}
+            {% if not session['loggedIn'] %}
             <li><a href="/loginPage">LoginPage</a></li>
             {% else %}
             <li><a href="/logOut">LoginPage</a></li>
