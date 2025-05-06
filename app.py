@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
 import pytz
-from initdb import makeTeam, deleteTeam, makeGame, deleteGame, deleteRequest
+from initdb import makeTeam, deleteTeam, makeGame, deleteGame, deleteRequest, deleteMessage
 
 app = Flask(__name__)
 app.secret_key = "secretKey"   ## ENTER SECRET KEY HERE
@@ -147,7 +147,8 @@ def team(teamName):
         conn.close()
         return render_template("team.html", stats=stats, games=games, captain=True, member=True, requests=requests)
     else:
-        if session["username"] + ", " in stats["members"] or bool(conn.execute("SELECT 1 FROM requests WHERE username = ? AND teamid = ?", (session["username"], stats["id"]))):
+        members = stats["members"] if stats["members"] is not None else ""
+        if session["username"] + ", " in members or bool(conn.execute("SELECT 1 FROM requests WHERE username = ? AND teamid = ?", (session["username"], stats["id"]))):
             member = True
         else:
             member = False
@@ -275,8 +276,12 @@ def admin():
     teams = getStandings()
     games = getTimezonedGames("")
     users = getUsers()
+    #get messages
+    conn = get_db_connection()
+    messages = conn.execute("SELECT * FROM messages").fetchall()
+    conn.close()
     #load page
-    return render_template("admin.html", teams=teams, games=games, users=users) 
+    return render_template("admin.html", teams=teams, games=games, users=users, messages=messages) 
 
 # users
 
@@ -426,6 +431,11 @@ def createGame():
     sortTeams()
     return redirect("/admin")
 
+@app.route("/deleteMessage/<int:id>", methods=["POST"])
+def deleteMessageRoute(id):
+    deleteMessage(id)
+    return redirect("/admin")
+
 
 
 
@@ -436,6 +446,24 @@ def index():
     teams = getStandings()
     games = getTimezonedGames("")
     return render_template("index.html", teams=teams, games=games)
+
+#contact
+@app.route("/submitMessage", methods=["POST"])
+def submitMessage():
+    #get data
+    name = request.form.get("name").strip()
+    email = request.form.get("email").strip()
+    message = request.form.get("message").strip()
+
+    #put in database
+    conn = get_db_connection()
+    conn.execute("INSERT INTO messages (name, email, message) VALUES (?, ?, ?)", (name, email, message))
+    conn.commit()
+    conn.close()
+
+    #handle user
+    flash("Message Submitted")
+    return redirect("/index")
 
 # LOADED
 

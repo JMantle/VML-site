@@ -165,6 +165,35 @@ def deleteRequest(id):
     connect.commit()
     connect.close()
 
+def resetMessages():
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DROP TABLE IF EXISTS messages")
+
+    c.execute("""
+
+        CREATE TABLE messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT,
+            message TEXT
+        )
+
+    """)
+
+    connect.commit()
+    connect.close()
+
+def deleteMessage(id):
+    connect = sqlite3.connect("database.db")
+    c = connect.cursor()
+
+    c.execute("DELETE FROM messages WHERE id = ?", (id,))
+
+    connect.commit()
+    connect.close()
+
 
 def main():
     loop = True
@@ -217,6 +246,11 @@ def main():
         elif answer == "dr":
             id = input("id: ")
             deleteRequest(id)
+        elif answer == "rm":
+            resetMessages()
+        elif answer == "dm":
+            id = input("id: ")
+            deleteMessage(id)
 
 
 # prevent accidental running

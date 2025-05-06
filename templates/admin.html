@@ -176,6 +176,36 @@
     </form>
   </section>
 
+  
+  <!-- messages -->
+  <section class="section">
+    <h2>Messages</h2>
+    <table class="upcoming-games-table">   <!-- lazy on the css still -->
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for message in messages %}
+          <tr>
+              <td>{{ message.name }}</td>
+              <td>{{ message.email }}</td>
+              <td>{{ message.message }}</td>
+              <td>
+                  <form action="/deleteMessage/{{ message.id }}" method="POST">
+                      <button type="submit">Delete</button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  </section>
+
   <footer>
     <p>&copy; 2025 VAIL. All rights reserved.</p>
   </footer>
