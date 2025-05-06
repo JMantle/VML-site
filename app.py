@@ -465,6 +465,12 @@ def submitMessage():
     flash("Message Submitted")
     return redirect("/index")
 
+#log out
+@app.route("/logOut")
+def logOut():
+    session.clear()
+    return redirect("/")
+
 # LOADED
 
 @app.route("/loaded")

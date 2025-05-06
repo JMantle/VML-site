@@ -23,14 +23,15 @@
         <li><a href="#games">Games</a></li>
         <li><a href="#teams">Teams</a></li>
         <li><a href="#contact">Contact Us</a></li>
-        {% if not session['loggedIn'] %}
-        <li><a href="/loginPage">Login</a></li>
-        {% endif %}
         {% if session['captain'] %}
         <li><a href="/manageTeam">Manage Team</a></li>
         {% endif %}
         {% if session['adminperms'] %}
         <li><a href="/admin">Admin</a></li>
+        {% endif %}
+        <li><a href="/loginPage">LoginPage</a></li>
+        {% else %}
+        <li><a href="/logOut">LoginPage</a></li>
         {% endif %}
       </ul>
     </nav>
