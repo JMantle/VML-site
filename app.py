@@ -173,7 +173,7 @@ def team(teamName):
         #take team members
         members = stats["members"] if stats["members"] is not None else ""
         #get if the user has already requested membership 
-        requested = bool(conn.execute("SELECT 1 FROM requests WHERE username = ? AND teamid = ?", (session["username"], stats["id"])))
+        requested = bool(conn.execute("SELECT 1 FROM requests WHERE username = ? AND teamid = ?", (session["username"], stats["id"])).fetchone())
         #decide whether to show the request membership button or not.
         if (session["loggedIn"] and session["username"] in members) or  requested:
             member = True

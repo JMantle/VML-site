@@ -173,7 +173,7 @@
                 <h2>Join Team</h2>
                 {% if session['loggedIn'] %}
                     <form action="/requestMembership/{{ stats['id'] }}/{{ session['username']}}" method="POST">
-                        <textarea type="text" name="message" method="POST" placeholder="Enter Message to the captain">
+                        <textarea type="text" name="message" method="POST" placeholder="Enter Message to the captain"></textarea>
                         <button type="submit">Request Membership</button>
                     </form>
                 {% else %}
