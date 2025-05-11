@@ -305,10 +305,15 @@ def acceptRequest(id):
     #get request
     request = conn.execute("SELECT * FROM requests WHERE id = ?", (id,)).fetchone()
     #insert it into members
-    members = conn.execute("SELECT members FROM teams WHERE id = ?", (id,)).fetchone()
-    members = members + ", " + request["username"]
-    conn.execute("UPDATE teams SET members = ? WHERE id = ?", (members, id))
-    
+    members = conn.execute("SELECT members FROM teams WHERE id = ?", (request["teamid"],)).fetchone()[0] or ""
+    #checking to see if members already has members
+    if members:
+        members = members + ", " + request["username"]
+    else:
+        members = request["username"]
+    conn.execute("UPDATE teams SET members = ? WHERE id = ?", (members, request["teamid"]))
+    conn.close()
+
     #delete request
     deleteRequest(id)
 

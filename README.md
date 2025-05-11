@@ -29,3 +29,7 @@ please only view this code and share it for viewing. Please contact vailminorlea
 # Note on Design
 
 Most of the HTML and CSS used in this project was generated with the assistance of AI tools or was made by someone else and implemented with their permission. My primary focus was on backend development, authentication, and data handling. Design elements were integrated to support the functionality and improve user experience.
+
+# Known issues/ further improvements
+
+accepting membership requests currently not working properly, will get round to it when i have time
