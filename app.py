@@ -308,10 +308,12 @@ def acceptRequest(id):
     members = conn.execute("SELECT members FROM teams WHERE id = ?", (request["teamid"],)).fetchone()[0] or ""
     #checking to see if members already has members
     if members:
-        members = members + ", " + request["username"]
+        members += ", " + request["username"]
     else:
         members = request["username"]
+
     conn.execute("UPDATE teams SET members = ? WHERE id = ?", (members, request["teamid"]))
+    conn.commit()
     conn.close()
 
     #delete request

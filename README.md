@@ -32,4 +32,4 @@ Most of the HTML and CSS used in this project was generated with the assistance 
 
 # Known issues/ further improvements
 
-accepting membership requests currently not working properly, will get round to it when i have time
+tables, navbar and other features do not scale well when size of the window is reduced or used on mobile
